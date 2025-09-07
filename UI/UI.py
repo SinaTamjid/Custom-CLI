@@ -6,6 +6,9 @@ from PyQt5.QtWidgets import (
     QVBoxLayout, QLineEdit, QTextEdit
 )
 import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+import Main.main
 
 class CustomCLI(QMainWindow):
     def __init__(self, parent=None):
@@ -46,7 +49,7 @@ class CustomCLI(QMainWindow):
     def append_output(self, text):
         self.output.append(text)
         self.output.moveCursor(QTextCursor.End)
-        
+
     def keyPressEvent(self, event):
           if event.key() == Qt.Key_Up and self.command_container:
                     self.input.setText(self.command_container[-1])
