@@ -12,7 +12,7 @@ class CustomCLI(QMainWindow):
         super().__init__(parent)
         self.setWindowTitle("CLI")
         self.setWindowIcon(QIcon(r"Assets\terminal_icon.ico"))
-        self.setFixedSize(600, 400)
+        self.setFixedSize(600, 300)
         self.command_container = []
         self.initUI()
 
@@ -46,6 +46,7 @@ class CustomCLI(QMainWindow):
     def append_output(self, text):
         self.output.append(text)
         self.output.moveCursor(QTextCursor.End)
+        
     def keyPressEvent(self, event):
           if event.key() == Qt.Key_Up and self.command_container:
                     self.input.setText(self.command_container[-1])
