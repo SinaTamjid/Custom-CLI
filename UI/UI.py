@@ -56,10 +56,6 @@ class CustomCLI(QMainWindow):
     def append_output(self, text):
         self.output.append(text)
         self.output.moveCursor(QTextCursor.End)
-
-#     def keyPressEvent(self, event):
-#           if event.key() == Qt.Key_Up and self.command_map:
-#                     self.input.setText(self.command_map[-1])
  
 def main():
     app = QApplication(sys.argv)
