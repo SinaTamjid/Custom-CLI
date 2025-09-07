@@ -38,21 +38,28 @@ class CustomCLI(QMainWindow):
 
         layout.addWidget(self.output)
         layout.addWidget(self.input)
+        self.command_map={
+             "sayhello":Main.main.sayhello,
+             "cls":lambda: Main.main.cls(self.output)
+          }
 
     def store_command(self):
-        command = self.input.text().strip()
-        if command:
-            self.command_container.append(command)
-            self.append_output(f"<:\\> {command}")
+          command = self.input.text().strip()
+          if command in self.command_map:
+            result=self.command_map[command]()
+            self.append_output(f">>> {result}")
             self.input.clear()
+          else:
+               self.append_output(">>> Unknown Command")
+               self.input.clear()
 
     def append_output(self, text):
         self.output.append(text)
         self.output.moveCursor(QTextCursor.End)
 
     def keyPressEvent(self, event):
-          if event.key() == Qt.Key_Up and self.command_container:
-                    self.input.setText(self.command_container[-1])
+          if event.key() == Qt.Key_Up and self.command_map:
+                    self.input.setText(self.command_map[-1])
  
 def main():
     app = QApplication(sys.argv)
