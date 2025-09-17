@@ -39,3 +39,12 @@ def maya(exe_path:str, target_path:str="."):
         return f"Maya Launched"
     except Exception as e:
         return f"Error Launching Maya: {e}"
+
+def github():
+    user_profile = os.environ.get("USERPROFILE")
+    exe_path = os.path.join(user_profile, "AppData", "Local", "GitHubDesktop", "GitHubDesktop.exe")
+    if os.path.exists(exe_path):
+        subprocess.Popen([exe_path], shell=True)
+        return f"GitHub Desktop launched."
+    else:
+        return "GitHub Desktop not found."

@@ -71,10 +71,10 @@ def get_maya_exe_path():
                 install_path, _ = winreg.QueryValueEx(key, "MAYA_INSTALL_LOCATION")
                 mayapy_path = os.path.join(install_path, "bin", "maya.exe")
 
-                # Validate path
                 if os.path.exists(mayapy_path):
                     return mayapy_path
-        except Exception as e:
-            print(f"Failed to find Maya {version}: {e}")
-
+        except FileNotFoundError:
+            continue  
+        except OSError:
+            continue  
     return None  

@@ -47,7 +47,8 @@ class CustomCLI(QMainWindow):
              "cls":lambda: Main.main.cls(self.output),
              "vscode":lambda:Main.main.vscode(self.vscode_exe),
              "git": lambda:Main.main.git(self.git_exe),
-             "maya":lambda:Main.main.maya(self.maya_exe)
+             "maya":lambda:Main.main.maya(self.maya_exe),
+             "github":lambda:Main.main.github()
           }
 
     def store_command(self):
