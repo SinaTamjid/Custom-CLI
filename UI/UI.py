@@ -43,7 +43,6 @@ class CustomCLI(QMainWindow):
         layout.addWidget(self.output)
         layout.addWidget(self.input)
         self.command_map={
-             "sayhello":Main.main.sayhello,
              "cls":lambda: Main.main.cls(self.output),
              "vscode":lambda:Main.main.vscode(self.vscode_exe),
              "git": lambda:Main.main.git(self.git_exe),
