@@ -9,13 +9,17 @@ import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 import Main.main
+import Assets.Path_Finder.vs_path_reg as Path
+
 
 class CustomCLI(QMainWindow):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setWindowTitle("CLI")
-        self.setWindowIcon(QIcon(r"Assets\terminal_icon.ico"))
+        self.setWindowIcon(QIcon(r"Assets\Icons\terminal_icon.ico"))
         self.setFixedSize(600, 300)
+        self.vscode_exe = Path.get_vscode_exe_path()
+        self.git_exe=Path.get_git_exe_path()
         self.command_container = []
         self.initUI()
 
@@ -40,7 +44,9 @@ class CustomCLI(QMainWindow):
         layout.addWidget(self.input)
         self.command_map={
              "sayhello":Main.main.sayhello,
-             "cls":lambda: Main.main.cls(self.output)
+             "cls":lambda: Main.main.cls(self.output),
+             "vscode":lambda:Main.main.vscode(self.vscode_exe),
+             "git": lambda:Main.main.git(self.git_exe)
           }
 
     def store_command(self):
