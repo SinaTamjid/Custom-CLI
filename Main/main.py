@@ -31,4 +31,11 @@ def git(exe_path:str, target_path:str="."):
         return f"Error Launching Git: {e}"
 
 
-
+def maya(exe_path:str, target_path:str="."):
+    if not exe_path or not os.path.exists(exe_path):
+        return" Maya executable Not Found."
+    try:
+        subprocess.Popen([exe_path],shell=True)
+        return f"Maya Launched"
+    except Exception as e:
+        return f"Error Launching Maya: {e}"

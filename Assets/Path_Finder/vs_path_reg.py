@@ -59,3 +59,22 @@ def get_git_exe_path() -> str | None:
             except FileNotFoundError:
                 continue
     return None
+
+def get_maya_exe_path():
+    """Finds Maya's .exe File dynamically."""
+    maya_versions = ["2025", "2024", "2023", "2022", "2021"]
+
+    for version in maya_versions:
+        try:
+            key_path = rf"SOFTWARE\Autodesk\Maya\{version}\Setup\InstallPath"
+            with winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, key_path) as key:
+                install_path, _ = winreg.QueryValueEx(key, "MAYA_INSTALL_LOCATION")
+                mayapy_path = os.path.join(install_path, "bin", "maya.exe")
+
+                # Validate path
+                if os.path.exists(mayapy_path):
+                    return mayapy_path
+        except Exception as e:
+            print(f"Failed to find Maya {version}: {e}")
+
+    return None  

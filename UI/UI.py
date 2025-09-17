@@ -11,7 +11,6 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 import Main.main
 import Assets.Path_Finder.vs_path_reg as Path
 
-
 class CustomCLI(QMainWindow):
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -20,6 +19,7 @@ class CustomCLI(QMainWindow):
         self.setFixedSize(600, 300)
         self.vscode_exe = Path.get_vscode_exe_path()
         self.git_exe=Path.get_git_exe_path()
+        self.maya_exe=Path.get_maya_exe_path()
         self.command_container = []
         self.initUI()
 
@@ -46,7 +46,8 @@ class CustomCLI(QMainWindow):
              "sayhello":Main.main.sayhello,
              "cls":lambda: Main.main.cls(self.output),
              "vscode":lambda:Main.main.vscode(self.vscode_exe),
-             "git": lambda:Main.main.git(self.git_exe)
+             "git": lambda:Main.main.git(self.git_exe),
+             "maya":lambda:Main.main.maya(self.maya_exe)
           }
 
     def store_command(self):
