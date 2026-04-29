@@ -1,9 +1,9 @@
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt,QSize
 from PyQt5.QtGui import QIcon
 from PyQt5.QtGui import QFont, QTextCursor
 from PyQt5.QtWidgets import (
     QApplication, QMainWindow, QWidget,
-    QVBoxLayout, QLineEdit, QTextEdit
+    QVBoxLayout,QHBoxLayout, QLineEdit, QTextEdit,QPushButton,QFileDialog
 )
 import sys
 import os
@@ -16,7 +16,7 @@ class CustomCLI(QMainWindow):
         super().__init__(parent)
         self.setWindowTitle("CLI")
         self.setWindowIcon(QIcon(r"Assets\Icons\terminal_icon.ico"))
-        self.setFixedSize(600, 300)
+        self.setFixedSize(700, 400)
         self.vscode_exe = Path.get_vscode_exe_path()
         self.git_exe=Path.get_git_exe_path()
         self.maya_exe=Path.get_maya_exe_path()
@@ -25,6 +25,7 @@ class CustomCLI(QMainWindow):
 
     def initUI(self):
         self.central_wgt = QWidget()
+        self.central_wgt.setStyleSheet("background-color: #B2BEB5")
         self.setCentralWidget(self.central_wgt)
 
         layout = QVBoxLayout(self.central_wgt)
@@ -32,23 +33,50 @@ class CustomCLI(QMainWindow):
         self.output = QTextEdit()
         self.output.setReadOnly(True)
         self.output.setFont(QFont("Courier", 10))
-        self.output.setStyleSheet("background-color: #1e1e1e; color: #d4d4d4;")
+        self.output.setStyleSheet("background-color: #1e1e1e; color: #d4d4d4; border-radius: 5px")
 
+
+        self.inp_wgt=QWidget()
+        self.inp_layout=QHBoxLayout(self.inp_wgt)
+        self.inp_layout.setContentsMargins(0,0,0,0)
         self.input = QLineEdit()
         self.input.setPlaceholderText("<:\\>")
         self.input.setFont(QFont("Courier", 10))
-        self.input.setStyleSheet("background-color: #2d2d2d; color: #ffffff;")
+        self.input.setStyleSheet("background-color: #2d2d2d; color: #ffffff; border-radius: 5px")
         self.input.returnPressed.connect(self.store_command)
 
+
+        self.add_btn=QPushButton()
+        self.add_btn.setIcon(QIcon(r"Assets\Icons\Adds.ico"))
+        self.add_btn.setIconSize(QSize(16, 16))
+        self.add_btn.clicked.connect(self.Add_apps)
+        self.add_btn.setStyleSheet("background-color: #2d2d2d; color: #ffffff; border-radius: 5px")
+        self.add_btn.setFixedSize(25,25)
+
+
+        self.inp_layout.addWidget(self.add_btn)
+        self.inp_layout.addWidget(self.input)
+
+
         layout.addWidget(self.output)
-        layout.addWidget(self.input)
+        layout.addWidget(self.inp_wgt)
+
         self.command_map={
+             "cmds":lambda: Main.main.cmds(),
              "cls":lambda: Main.main.cls(self.output),
              "vscode":lambda:Main.main.vscode(self.vscode_exe),
              "git": lambda:Main.main.git(self.git_exe),
              "maya":lambda:Main.main.maya(self.maya_exe),
              "github":lambda:Main.main.github()
           }
+
+
+    def Add_apps(self):
+        self.output.setText("not complete!!")
+        file_path,ok=QFileDialog.getOpenFileName(self,"Select App","","(*.exe,*.lnk)")
+        if file_path and ok:
+            print(file_path)
+            self.output.setText(f"selected App Added To List!!")
 
     def store_command(self):
           command = self.input.text().strip()
@@ -57,13 +85,15 @@ class CustomCLI(QMainWindow):
             self.append_output(f">>> {result}")
             self.input.clear()
           else:
-               self.append_output(">>> Unknown Command")
+               self.append_output(f">>> Unknown Command: {command}")
                self.input.clear()
 
     def append_output(self, text):
         self.output.append(text)
         self.output.moveCursor(QTextCursor.End)
- 
+
+
+
 def main():
     app = QApplication(sys.argv)
     window = CustomCLI()

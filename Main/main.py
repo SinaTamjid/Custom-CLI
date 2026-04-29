@@ -46,3 +46,7 @@ def github():
         return f"GitHub Desktop launched."
     else:
         return "GitHub Desktop not found."
+
+def cmds():
+    command_list=["github","maya","git","vscode","cls"]
+    return "Available commands:\n - " + "\n - ".join(command_list)
