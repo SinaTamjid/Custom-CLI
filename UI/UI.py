@@ -2,14 +2,18 @@ from PyQt5.QtCore import Qt,QSize
 from PyQt5.QtGui import QIcon
 from PyQt5.QtGui import QFont, QTextCursor
 from PyQt5.QtWidgets import (
-    QApplication, QMainWindow, QWidget,
-    QVBoxLayout,QHBoxLayout, QLineEdit, QTextEdit,QPushButton,QFileDialog
+    QApplication, QMainWindow, QWidget,QVBoxLayout,QHBoxLayout,
+    QLineEdit, QTextEdit,QPushButton,QFileDialog,QToolBar,QAction
 )
+from AppsConfiguration import AppsUI
 import sys
 import os
+import json
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-import Main.main
-import Assets.Path_Finder.vs_path_reg as Path
+import Main.main  # type:ignore
+import Assets.Path_Finder.vs_path_reg as Path  # type:ignore
+
+APP_NAME = "MyLauncher"
 
 class CustomCLI(QMainWindow):
     def __init__(self, parent=None):
@@ -30,12 +34,29 @@ class CustomCLI(QMainWindow):
 
         layout = QVBoxLayout(self.central_wgt)
 
+        # Toolbar
+        self.toolBar = QToolBar()
+        self.toolBar.setMovable(False)
+        self.toolBar.setFloatable(False)
+
+        self.addToolBar(self.toolBar)
+
+        open_apps_action = QAction("Apps Configuration",self)
+        open_apps_action.triggered.connect(self.openAppsConfig)
+
+        self.toolBar.addAction(open_apps_action)
+        self.toolBar.setFont(QFont("Arial",10))
+        self.toolBar.setStyleSheet("background-color: #B2BEB5;border-radius: 1px")
+
+
+        # output
         self.output = QTextEdit()
         self.output.setReadOnly(True)
         self.output.setFont(QFont("Courier", 10))
         self.output.setStyleSheet("background-color: #1e1e1e; color: #d4d4d4; border-radius: 5px")
 
 
+        # input
         self.inp_wgt=QWidget()
         self.inp_layout=QHBoxLayout(self.inp_wgt)
         self.inp_layout.setContentsMargins(0,0,0,0)
@@ -46,9 +67,7 @@ class CustomCLI(QMainWindow):
         self.input.returnPressed.connect(self.store_command)
 
 
-        self.add_btn=QPushButton()
-        self.add_btn.setIcon(QIcon(r"Assets\Icons\Adds.ico"))
-        self.add_btn.setIconSize(QSize(16, 16))
+        self.add_btn=QPushButton("+")
         self.add_btn.clicked.connect(self.Add_apps)
         self.add_btn.setStyleSheet("background-color: #2d2d2d; color: #ffffff; border-radius: 5px")
         self.add_btn.setFixedSize(25,25)
@@ -70,13 +89,50 @@ class CustomCLI(QMainWindow):
              "github":lambda:Main.main.github()
           }
 
+    def Add_apps(self,command=None):
+        exe_path, _ = QFileDialog.getOpenFileName(
+            self, "Select application", "", "Applications (*.exe *.lnk)"
+        )
+        if exe_path:
+            name = os.path.basename(exe_path)
+            data = self.load_apps()
+            data["apps"].append({
+                "name": name,
+                "path": exe_path,
+                "icon": None,
+                "favorite": False,
+                "command":command
+            })
+            self.save_apps(data)
+            self.append_output(f"Added app: {name}")
 
-    def Add_apps(self):
-        self.output.setText("not complete!!")
-        file_path,ok=QFileDialog.getOpenFileName(self,"Select App","","(*.exe,*.lnk)")
-        if file_path and ok:
-            print(file_path)
-            self.output.setText(f"selected App Added To List!!")
+    def get_config_path(self):
+        base_dir = os.path.dirname(os.path.abspath(sys.argv[0]))
+        config_file = os.path.join(base_dir, "apps.json")
+        os.makedirs(base_dir, exist_ok=True)
+        return config_file
+
+    def load_apps(self):
+        path=self.get_config_path()
+
+        if not os.path.exists(path):
+            return {"apps":[]}
+
+        try:
+            with open(path,"r",encoding="utf-8") as f:
+                return json.load(f)
+        except json.JSONDecodeError:
+            return {"apps":[]}
+
+    def save_apps(self,data):
+
+        path=self.get_config_path()
+        tmp=path +".tmp"
+
+        with open(tmp,"w",encoding="utf-8") as f:
+            json.dump(data,f,indent=4,ensure_ascii=False)
+
+        os.replace(tmp,path)
 
     def store_command(self):
           command = self.input.text().strip()
@@ -93,6 +149,10 @@ class CustomCLI(QMainWindow):
         self.output.moveCursor(QTextCursor.End)
 
 
+    def openAppsConfig(self):
+        self.openapps_window=AppsUI()
+        result=self.openapps_window.exec_()
+        return result
 
 def main():
     app = QApplication(sys.argv)
