@@ -135,13 +135,13 @@ class CustomCLI(QMainWindow):
         os.replace(tmp,path)
 
     def store_command(self):
-          command = self.input.text().strip()
-          if command in self.command_map:
-            result=self.command_map[command]()
+          commands = self.input.text().strip()
+          if commands in self.command_map:
+            result=self.command_map[commands]()
             self.append_output(f">>> {result}")
             self.input.clear()
           else:
-               self.append_output(f">>> Unknown Command: {command}")
+               self.append_output(f">>> Unknown Command: {commands}")
                self.input.clear()
 
     def append_output(self, text):
@@ -154,11 +154,3 @@ class CustomCLI(QMainWindow):
         result=self.openapps_window.exec_()
         return result
 
-def main():
-    app = QApplication(sys.argv)
-    window = CustomCLI()
-    window.show()
-    sys.exit(app.exec_())
-
-if __name__ == "__main__":
-    main()

@@ -1,16 +1,11 @@
 {
     "apps": [
         {
-            "name": "CASH CLEANER SIMULATOR LOUD AND LOADED.lnk",
-            "path": "C:/Users/SinaTamjid/Desktop/CASH CLEANER SIMULATOR LOUD AND LOADED.lnk",
+            "name": "pycharm-professional-2025.3.3.exe",
+            "path": "D:/New folder/pycharm-professional-2025.3.3.exe",
             "icon": null,
-            "favorite": false
-        },
-        {
-            "name": "PacketRaft.lnk",
-            "path": "C:/Users/SinaTamjid/Desktop/PacketRaft.lnk",
-            "icon": null,
-            "favorite": false
+            "favorite": false,
+            "command": false
         }
     ]
 }

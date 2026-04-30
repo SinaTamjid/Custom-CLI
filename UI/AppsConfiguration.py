@@ -1,9 +1,7 @@
-from PyQt5.QtCore import Qt,QSize
-from PyQt5.QtGui import QIcon
-from PyQt5.QtGui import QFont, QTextCursor
+from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import (
-    QApplication, QMainWindow, QWidget,QDialog,QLabel,
-    QVBoxLayout,QHBoxLayout, QLineEdit, QTextEdit,QPushButton,QFileDialog
+    QWidget,QDialog,QLabel,
+    QVBoxLayout,QHBoxLayout
 )
 import sys
 import os
@@ -13,19 +11,22 @@ import json
 class AppsUI(QDialog):
     def __init__(self,parent=None):
         super().__init__(parent)
+
         self.setWindowTitle("Apps Configuration")
         self.setWindowFlags(self.windowFlags() & ~Qt.WindowContextHelpButtonHint)
-        self.setFixedSize(300,300)
+        self.setFixedSize(700,400)
         self.UI()
+
     def UI(self):
         self.setStyleSheet("background-color: #B2BEB5")
-        self.layout=QVBoxLayout(self)
+        layout = QVBoxLayout(self)
 
         apps_wgt=self.app_data_loader()
-        self.layout.addWidget(apps_wgt)
+        layout.addWidget(apps_wgt)
 
 
-    def get_config_path(self):
+    @staticmethod
+    def get_config_path():
         base_dir = os.path.dirname(os.path.abspath(sys.argv[0]))
         config_file = os.path.join(base_dir, "apps.json")
         os.makedirs(base_dir, exist_ok=True)
@@ -57,8 +58,8 @@ class AppsUI(QDialog):
 
             app_path=QLabel(app["path"])
             Hlayout.addWidget(app_name)
-            Hlayout.setSpacing(2)
+            Hlayout.setSpacing(30)
             Hlayout.addWidget(app_path)
             layout.addWidget(Hwgt)
-        return data_wgt
 
+        return data_wgt
